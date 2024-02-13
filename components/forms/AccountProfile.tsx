@@ -1,6 +1,6 @@
 'use client';
 
-import { User } from '@/types';
+import { IUser } from '@/types';
 import { ChangeEvent, FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,15 +20,20 @@ import Image from 'next/image';
 import { Textarea } from '../ui/textarea';
 import { isBase64Image } from '@/lib/utils';
 import { useUploadThing } from '@/lib/uploadthing';
+import { updateUser } from '@/lib/actions/user.actions';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface AccountProfileProps {
-  user: User;
+  user: IUser;
   btnTitle: string;
 }
 
 const AccountProfile: FC<AccountProfileProps> = ({ user, btnTitle }) => {
-  const [files, setFiles] = useState<File[]>([]);
+  const router = useRouter();
+  const pathname = usePathname();
   const { startUpload } = useUploadThing('media');
+
+  const [files, setFiles] = useState<File[]>([]);
 
   const form = useForm({
     resolver: zodResolver(UserValidation),
@@ -40,32 +45,8 @@ const AccountProfile: FC<AccountProfileProps> = ({ user, btnTitle }) => {
     },
   });
 
-  const handleImage = (
-    event: ChangeEvent<HTMLInputElement>,
-    fieldChange: (_: string) => void,
-  ) => {
-    event.preventDefault();
-
-    const fileReader = new FileReader();
-
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-
-      setFiles(Array.from(event.target.files));
-
-      if (!file.type.includes('image')) return;
-
-      fileReader.onload = async event => {
-        const imageDataUrl = event.target?.result?.toString() || '';
-        fieldChange(imageDataUrl);
-      };
-      fileReader.readAsDataURL(file);
-    }
-  };
-
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     const blob = values.profile_photo;
-
     const hasImageChanged = isBase64Image(blob);
 
     if (hasImageChanged) {
@@ -76,7 +57,44 @@ const AccountProfile: FC<AccountProfileProps> = ({ user, btnTitle }) => {
       }
     }
 
-    // TODO: Update user profile
+    const userData: IUser = {
+      id: user.id,
+      name: values.name,
+      username: values.username,
+      image: values.profile_photo,
+      bio: values.bio,
+    };
+
+    await updateUser(userData, pathname);
+
+    if (pathname === '/profile/edit') {
+      router.back();
+    } else {
+      router.push('/');
+    }
+  };
+
+  const handleImage = (
+    e: ChangeEvent<HTMLInputElement>,
+    fieldChange: (_: string) => void,
+  ) => {
+    e.preventDefault();
+
+    const fileReader = new FileReader();
+
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setFiles(Array.from(e.target.files));
+
+      if (!file.type.includes('image')) return;
+
+      fileReader.onload = async event => {
+        const imageDataUrl = event.target?.result?.toString() || '';
+        fieldChange(imageDataUrl);
+      };
+
+      fileReader.readAsDataURL(file);
+    }
   };
 
   return (

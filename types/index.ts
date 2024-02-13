@@ -1,6 +1,6 @@
-export interface User {
+export interface IUser {
   id: string | undefined;
-  objectId: string;
+  objectId?: string;
   username: string;
   name: string;
   bio: string;
