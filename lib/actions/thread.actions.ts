@@ -55,3 +55,40 @@ export async function fetchThreads(pageNumber = 1, pageSize = 20) {
     throw new Error(`Could not fetch threads: ${error.message}`);
   }
 }
+
+export async function fetchThreadById(threadId: string) {
+  try {
+    connectToDB();
+
+    // TODO: Populate Community
+    const thread = await Thread.findById(threadId)
+      .populate({
+        path: 'author',
+        model: User,
+        select: '_id id name image',
+      })
+      .populate({
+        path: 'children',
+        populate: [
+          {
+            path: 'author',
+            model: User,
+            select: '_id id name parentId image',
+          },
+          {
+            path: 'children',
+            model: Thread,
+            populate: {
+              path: 'author',
+              model: User,
+              select: '_id id name parentId image',
+            },
+          },
+        ],
+      })
+      .exec();
+    return thread;
+  } catch (error: any) {
+    throw new Error(`Could not fetch thread: ${error.message}`);
+  }
+} 
