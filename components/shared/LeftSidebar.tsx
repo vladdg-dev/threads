@@ -1,4 +1,4 @@
-import { SignOutButton, SignedIn } from "@clerk/nextjs";
+import { SignedIn } from "@clerk/nextjs";
 import Image from "next/image";
 import NavLinks from "./NavLinks";
 import Logout from "../Logout";
