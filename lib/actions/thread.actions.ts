@@ -20,3 +20,38 @@ export async function createThread(thread: IThread, path: string) {
     throw new Error(`Error creating thread: ${error.message}`);
   }
 }
+
+export async function fetchThreads(pageNumber = 1, pageSize = 20) {
+  try {
+    connectToDB();
+
+    const skipAmount = (pageNumber - 1) * pageSize;
+
+    const threadsQuery = Thread.find({ parentId: { $in: [null, undefined] } })
+      .sort({
+        createdAt: 'desc',
+      })
+      .skip(skipAmount)
+      .limit(pageSize)
+      .populate({ path: 'author', model: User })
+      .populate({
+        path: 'children',
+        populate: {
+          path: 'author',
+          model: User,
+          select: '_id name parentId image',
+        },
+      });
+
+    const totalThreadCount = await Thread.countDocuments({
+      parentId: { $in: [null, undefined] },
+    });
+    const threads = await threadsQuery.exec();
+
+    const isNext = totalThreadCount > skipAmount + threads.length;
+
+    return { threads, isNext };
+  } catch (error: any) {
+    throw new Error(`Could not fetch threads: ${error.message}`);
+  }
+}
