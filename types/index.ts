@@ -12,3 +12,18 @@ export interface IThread {
   author: string;
   communityId: string | null;
 }
+
+export interface IAuthor {
+  id: string;
+  name: string;
+  image: string;
+}
+
+export interface ICommunity extends IAuthor {}
+
+export interface IComments {
+  author: {
+    image: string;
+  }[];
+  isComment?: boolean;
+}
