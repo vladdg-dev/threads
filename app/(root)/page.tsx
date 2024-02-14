@@ -2,6 +2,11 @@ import ThreadCard from '@/components/cards/ThreadCard';
 import { fetchThreads } from '@/lib/actions/thread.actions';
 import { currentUser } from '@clerk/nextjs';
 
+export const metadata = {
+  title: 'Threads - Home',
+  description: 'Next.js 14 Meta Threads Application',
+};
+
 export default async function Home() {
   const user = await currentUser();
   const response = await fetchThreads(1, 30);
