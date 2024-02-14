@@ -3,7 +3,7 @@
   "semi": true,
   "tabWidth": 2,
   "useTabs": false,
-  "trailingComma": "all",
+  "trailingComma": "es5",
   "jsxSingleQuote": false,
   "arrowParens": "avoid",
   "endOfLine": "auto"

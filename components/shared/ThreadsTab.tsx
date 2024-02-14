@@ -16,14 +16,15 @@ const ThreadsTab: FC<ThreadsTabProps> = async ({
   accountId,
   accountType,
 }) => {
-  let response;
+  const response = await(
+    accountType === 'Community'
+      ? fetchCommunityPosts(accountId)
+      : fetchUserPosts(accountId)
+  );
 
-  if (accountType === 'Community') {
-    response = await fetchCommunityPosts(accountId);
-  } else {
-    response = await fetchUserPosts(accountId);
+  if (!response) {
+    redirect('/');
   }
-  if (!response) redirect('/');
 
   return (
     <section className="mt-9 flex flex-col gap-10">

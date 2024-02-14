@@ -16,7 +16,6 @@ const ProfileHeader: FC<ProfileHeaderProps> = ({
   username,
   imgUrl,
   bio,
-  type,
 }) => {
   return (
     <div className="flex w-full flex-col justify-start">
