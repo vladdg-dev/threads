@@ -8,7 +8,7 @@ import { IUser } from '@/types';
 import { currentUser } from '@clerk/nextjs';
 import Image from 'next/image';
 
-const Communities = async ({ params }: { params: { id: string } }) => {
+const Community = async ({ params }: { params: { id: string } }) => {
   const user = await currentUser();
   if (!user) return null;
 
@@ -75,4 +75,4 @@ const Communities = async ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default Communities;
+export default Community;
