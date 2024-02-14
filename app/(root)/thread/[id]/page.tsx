@@ -3,6 +3,7 @@ import Comment from '@/components/forms/Comment';
 
 import { fetchThreadById } from '@/lib/actions/thread.actions';
 import { fetchUser } from '@/lib/actions/user.actions';
+import { IThreadCard } from '@/types';
 import { currentUser } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
@@ -42,7 +43,7 @@ const Thread = async ({ params }: { params: { id: string } }) => {
       </div>
 
       <div className="mt-10">
-        {thread.children.map((childItem: any) => (
+        {thread.children.map((childItem: IThreadCard) => (
           <ThreadCard
             key={childItem._id}
             id={childItem._id}

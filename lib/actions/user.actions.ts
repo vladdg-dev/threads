@@ -4,6 +4,7 @@ import { IUser } from '@/types';
 import User from '../models/user.model';
 import { connectToDB } from '../mongoose';
 import { revalidatePath } from 'next/cache';
+import Thread from '../models/thread.model';
 
 export async function updateUser(userData: IUser, path: string) {
   try {
@@ -42,5 +43,28 @@ export async function fetchUser(id: string) {
     // })
   } catch (error: any) {
     throw new Error(`Failed to create/update user: ${error.message}`);
+  }
+}
+
+export async function fetchUserPosts(userId: string) {
+  try {
+    connectToDB();
+
+    const threads = await User.findOne({ id: userId }).populate({
+      path: 'threads',
+      model: Thread,
+      populate: {
+        path: 'children',
+        model: Thread,
+        populate: {
+          path: 'author',
+          model: User,
+          select: 'name image id',
+        },
+      },
+    });
+    return threads;
+  } catch (error: any) {
+    throw new Error(`Could not fetch user posts: ${error.message}`);
   }
 }
