@@ -29,7 +29,7 @@ interface AccountProfileProps {
   btnTitle: string;
 }
 
-const AccountProfile: FC<AccountProfileProps> = ({ user, btnTitle }) => {
+const AccountProfile: FC<AccountProfileProps> = ({ user }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { startUpload } = useUploadThing('media');

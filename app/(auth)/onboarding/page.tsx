@@ -1,13 +1,15 @@
 import AccountProfile from '@/components/forms/AccountProfile';
-import { User } from '@/types';
+import { fetchUser } from '@/lib/actions/user.actions';
+import { IUser } from '@/types';
 import { currentUser } from '@clerk/nextjs';
 
 const Page = async () => {
   const user = await currentUser();
+  if (!user) return null;
 
-  const userInfo = {};
+  const userInfo = await fetchUser(user.id);
 
-  const userData: User = {
+  const userData: IUser = {
     id: user?.id,
     objectId: userInfo?._id,
     username: userInfo?.username || user?.username,
@@ -16,6 +18,8 @@ const Page = async () => {
     image: userInfo?.image || user?.imageUrl,
   };
 
+  const plainUserData = JSON.parse(JSON.stringify(userData));
+
   return (
     <main className="mx-auto flex max-w-3xl flex-col justify-start px-10 py-20">
       <h1 className="head-text">Onboarding</h1>
@@ -23,7 +27,7 @@ const Page = async () => {
         Complete your profile now to use Threads
       </p>
       <section className="mt-9 bg-dark-2 p-10 rounded-md">
-        <AccountProfile user={userData} btnTitle="Continue" />
+        <AccountProfile user={plainUserData} btnTitle="Continue" />
       </section>
     </main>
   );

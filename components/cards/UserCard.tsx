@@ -1,13 +1,9 @@
 import { IUser } from '@/types';
 import Image from 'next/image';
 import { FC } from 'react';
-import { Button } from '../ui/button';
 import ViewProfileButton from '../shared/ViewProfileButton';
 
-const UserCard: FC<{ user: IUser; personType: string }> = ({
-  user,
-  personType,
-}) => {
+const UserCard: FC<{ user: IUser; personType: string }> = ({ user }) => {
   const { id, name, username, image } = user;
 
   return (

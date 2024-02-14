@@ -9,7 +9,7 @@ export interface IUser {
 
 export interface IThread {
   text: string;
-  author: IAuthor;
+  author: IAuthor | string;
   communityId: string | null;
 }
 
@@ -34,8 +34,10 @@ export interface IComment {
   parentId: string;
 }
 
-export interface IThreadCard extends IThread {
+export interface IThreadCard {
   _id: string;
+  text: string;
+  author: IAuthor;
   parentId: string;
   createdAt: string;
   children: IComments[];

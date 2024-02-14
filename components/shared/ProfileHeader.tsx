@@ -11,8 +11,6 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader: FC<ProfileHeaderProps> = ({
-  accountId,
-  authUserId,
   name,
   username,
   imgUrl,

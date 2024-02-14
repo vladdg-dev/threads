@@ -17,12 +17,8 @@ interface ThreadCardProps {
 
 const ThreadCard: FC<ThreadCardProps> = ({
   id,
-  currentUserId,
-  parentId,
   content,
   author,
-  community,
-  createdAt,
   comments,
   isComment,
 }) => {
