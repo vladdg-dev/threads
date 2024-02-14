@@ -119,3 +119,35 @@ export async function fetchUsers({
     throw new Error(`Could not fetch users: ${error.message}`);
   }
 }
+
+/**
+ * Retrieves activity for a user, including replies to the user's threads.
+ * @param {string} userId - The ID of the user.
+ * @returns {Promise<any>} - A promise that resolves to an array of replies.
+ */
+export async function fetchActivity(userId: string): Promise<any> {
+  try {
+    // Connect to the database
+    connectToDB();
+
+    // Find child thread IDs from user threads
+    const childThreadIds = (await Thread.find({ author: userId }))
+      .flatMap(userThread => userThread.children);
+
+    // Find replies to the user's threads by other users
+    const replies = await Thread.find({
+      _id: { $in: childThreadIds },
+      author: { $ne: userId },
+    }).populate({
+      path: 'author',
+      model: User,
+      select: 'name image _id',
+    });
+
+    // Return the replies
+    return replies;
+  } catch (error: any) {
+    // Throw an error if fetching activity fails
+    throw new Error(`Could not fetch activity: ${error.message}`);
+  }
+}

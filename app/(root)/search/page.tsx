@@ -1,10 +1,6 @@
 import UserCard from '@/components/cards/UserCard';
-import ProfileHeader from '@/components/shared/ProfileHeader';
-import ThreadsTab from '@/components/shared/ThreadsTab';
-import { profileTabs } from '@/constants';
-import { fetchUser, fetchUsers } from '@/lib/actions/user.actions';
+import { fetchUsers } from '@/lib/actions/user.actions';
 import { currentUser } from '@clerk/nextjs';
-import Image from 'next/image';
 
 export const metadata = {
   title: 'Threads - Search',
@@ -14,8 +10,6 @@ export const metadata = {
 const Search = async () => {
   const authenticatedUser = await currentUser();
   if (!authenticatedUser) return null;
-
-  const userInfo = await fetchUser(authenticatedUser.id);
 
   const response = await fetchUsers({
     userId: authenticatedUser.id,

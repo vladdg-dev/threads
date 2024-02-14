@@ -41,3 +41,11 @@ export interface IThreadCard extends IThread {
   children: IComments[];
   community: ICommunity;
 }
+
+export interface IActivity {
+  _id: string;
+  text: string;
+  author: IAuthor;
+  parentId: string;
+  children: IComment[];
+}
