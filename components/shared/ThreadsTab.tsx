@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { FC } from 'react';
 import ThreadCard from '../cards/ThreadCard';
 import { IThreadCard } from '@/types';
+import { fetchCommunityPosts } from '@/lib/actions/community.actions';
 
 interface ThreadsTabProps {
   currentUserId: string;
@@ -15,7 +16,13 @@ const ThreadsTab: FC<ThreadsTabProps> = async ({
   accountId,
   accountType,
 }) => {
-  const response = await fetchUserPosts(accountId);
+  let response;
+
+  if (accountType === 'Community') {
+    response = await fetchCommunityPosts(accountId);
+  } else {
+    response = await fetchUserPosts(accountId);
+  }
   if (!response) redirect('/');
 
   return (
