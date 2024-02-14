@@ -27,3 +27,9 @@ export interface IComments {
   }[];
   isComment?: boolean;
 }
+
+export interface IComment {
+  text: string;
+  author: string;
+  parentId: string;
+}

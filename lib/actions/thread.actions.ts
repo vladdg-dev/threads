@@ -1,6 +1,6 @@
 'use server';
 
-import { IThread } from '@/types';
+import { IComment, IThread } from '@/types';
 import { connectToDB } from '../mongoose';
 import Thread from '../models/thread.model';
 import User from '../models/user.model';
@@ -91,4 +91,32 @@ export async function fetchThreadById(threadId: string) {
   } catch (error: any) {
     throw new Error(`Could not fetch thread: ${error.message}`);
   }
-} 
+}
+
+export async function addCommentToThread(
+  threadComment: IComment,
+  path: string,
+) {
+  try {
+    connectToDB();
+
+    const originalThread = await Thread.findById(threadComment.parentId);
+    if (!originalThread) throw new Error(`Thread not found`);
+
+    const comment = new Thread({
+      text: threadComment.text,
+      author: threadComment.author,
+      parentId: threadComment.parentId,
+    });
+
+    const savedThreadComment = await comment.save();
+
+    originalThread.children.push(savedThreadComment._id);
+
+    await originalThread.save();
+
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Could not post comment: ${error.message}`);
+  }
+}
