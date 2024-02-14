@@ -6,6 +6,11 @@ import { fetchUser } from '@/lib/actions/user.actions';
 import { currentUser } from '@clerk/nextjs';
 import Image from 'next/image';
 
+export const metadata = {
+  title: 'Threads - Profile',
+  description: 'Next.js 14 Meta Threads Application',
+};
+
 const Profile = async () => {
   const user = await currentUser();
   if (!user) return null;

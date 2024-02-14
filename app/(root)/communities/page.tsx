@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Threads - Communities',
+  description: 'Next.js 14 Meta Threads Application',
+};
+
 const Communities = async () => {
   return (
     <section>

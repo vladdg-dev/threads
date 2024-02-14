@@ -3,6 +3,11 @@ import { fetchUser } from '@/lib/actions/user.actions';
 import { currentUser } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
+export const metadata = {
+  title: 'Threads - Create Thread',
+  description: 'Next.js 14 Meta Threads Application',
+};
+
 const CreateThread = async () => {
   const user = await currentUser();
   if (!user) return null;
